@@ -58,6 +58,7 @@ Multi_Wrapper<-function(path="/lab/solexa_weissman/cweng/Projects/MitoTracing_Ve
 require(Seurat)
 require(Signac)
 require(EnsDb.Hsapiens.v86)
+library(GenomeInfoDb)
 require(dplyr)
 require(ggplot2)
 inputdata.10x <- Read10X_h5(paste(path,"/raw_feature_bc_matrix.h5",sep=""))
@@ -68,7 +69,7 @@ rna_counts <- inputdata.10x$`Gene Expression`
 atac_counts <- inputdata.10x$Peaks
 # Only use standard chromasome for atac counts
 grange.counts <- StringToGRanges(rownames(atac_counts), sep = c(":", "-"))
-grange.use <- seqnames(grange.counts) %in% standardChromosomes(grange.counts)
+grange.use <- as.character(seqnames(grange.counts)) %in% standardChromosomes(grange.counts)
 atac_counts <- atac_counts[as.vector(grange.use), ]
 # Filter atac and rna counts
 rna_counts.filtered<-rna_counts[,CellID]
