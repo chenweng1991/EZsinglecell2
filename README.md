@@ -24,17 +24,17 @@ Wrap Seurat RNA clustering
 
 ``` r
 bmmc.data <- Read10X(data.dir = "/lab/solexa_weissman/cweng/Projects/MitoTracing_Velocity/SecondaryAnalysis/Donor01_BMMC_1/CellRanger/Donor01_BMMC_1/outs/filtered_feature_bc_matrix")
-bmmc.ob<-GEM_Wrapper(mtx=bmmc.data$`Gene Expression`,exp="DN1_BMMC1",res=)
+bmmc.ob<-GEM_Wrapper(mtx=bmmc.data$`Gene Expression`,exp="DN1_BMMC1",res=0.5)
 ```
 
----
+
 Wrap Seurat Multiomics clustering
 
 ``` r
 Donor01_CD34_1_Multiome_wrapper<-Multi_Wrapper(path="/lab/solexa_weissman/cweng/Projects/MitoTracing_Velocity/SecondaryAnalysis/Donor01_CD34_1_Multiomekit/CellRanger/Donor01_CD34_1/outs")
 ```
 
----
+
 Wrap Seurat ATAC clustering
 
 ``` r

@@ -1,10 +1,10 @@
 Package: EZsinglecell2
-Title: What the Package Does (One Line, Title Case)
+Title: Wrap up for routine single cell analysis
 Version: 0.0.0.9000
 Authors@R:
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
+    person("Chen", "Weng", , "cweng@wi.mit.edu", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: Wrap up for routine single cell analysis (one paragraph).
 Imports:
     EnsDb.Hsapiens.v86,Seurat,Signac,dplyr,ggplot2
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
