@@ -50,11 +50,13 @@ Cell_Variant.seurat <- FindClusters(Cell_Variant.seurat, resolution = res)
 #'
 #' This function allows you to perform standard sc-multiome clustering
 #' @param path this should be the path to the cell-ranger results XX/outs
+#' @param atacmin minimum atac fragment for each cell, default is 1000
+#' @param umimin minimum rna umi for each cell, default is 1000
 #' @return this returns seurat object with both RNA and ATAC
 #' @examples
 #' MultiWrapper(path="XX/CellRanger/Donor01_BMMC_1/outs/")
 #' @export
-Multi_Wrapper<-function(path="/lab/solexa_weissman/cweng/Projects/MitoTracing_Velocity/SecondaryAnalysis/Donor01_CD34_1_Multiomekit/CellRanger/Donor01_CD34_1/outs"){
+Multi_Wrapper<-function(path="/lab/solexa_weissman/cweng/Projects/MitoTracing_Velocity/SecondaryAnalysis/Donor01_CD34_1_Multiomekit/CellRanger/Donor01_CD34_1/outs",atacmin=1000,umimin=1000){
 require(Seurat)
 require(Signac)
 require(EnsDb.Hsapiens.v86)
@@ -95,9 +97,9 @@ ob[["ATAC"]]<-chrom_assay
 ob <- subset(
   x = ob,
   subset = nCount_ATAC < 7e4 &
-    nCount_ATAC > 1e3 &
+    nCount_ATAC > atacmin &
     nCount_RNA < 25000 &
-    nCount_RNA > 1000
+    nCount_RNA > umimin
 )
 # RNA analysis
 DefaultAssay(ob) <- "RNA"

@@ -6,11 +6,17 @@
 \usage{
 Multi_Wrapper(
  
-    path = "/lab/solexa_weissman/cweng/Projects/MitoTracing_Velocity/SecondaryAnalysis/Donor01_CD34_1_Multiomekit/CellRanger/Donor01_CD34_1/outs"
+    path = "/lab/solexa_weissman/cweng/Projects/MitoTracing_Velocity/SecondaryAnalysis/Donor01_CD34_1_Multiomekit/CellRanger/Donor01_CD34_1/outs",
+  atacmin = 1000,
+  umimin = 1000
 )
 }
 \arguments{
 \item{path}{this should be the path to the cell-ranger results XX/outs}
+
+\item{atacmin}{minimum atac fragment for each cell, default is 1000}
+
+\item{umimin}{minimum rna umi for each cell, default is 1000}
 }
 \value{
 this returns seurat object with both RNA and ATAC
