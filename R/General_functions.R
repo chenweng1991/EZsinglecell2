@@ -14,3 +14,25 @@ Tomerge_v2<-function(A,B,leavex=T,leavey=F){
 	mergeAB<-mergeAB[,-1]
 	return(mergeAB)
 }
+
+
+
+#' Function to translate the RNA barcode into ATAC barcode and add a column
+#'
+#' This function allows you to input the metadata with row name as cell barcode
+#' @param meta  a dataframe with the row names as the RNA cell barcode usually with the post -1
+#' @param RNAclusterPost  Usually it is -1(default), but can be changed accordingly
+#' @return p from ggplot2
+#' @examples
+#' Translate_RNA2ATAC(meta)
+#' @export
+Translate_RNA2ATAC<-function(meta=bmmc.filtered@meta.data,RNAclusterPost="-1"){
+data(ATACWhite)
+data(RNAWhite)
+# ATACWhite<-read.table("/lab/solexa_weissman/cweng/Genomes/10X/WhiteList_10X_Multiome.ATAC")
+# RNAWhite<-read.table("/lab/solexa_weissman/cweng/Genomes/10X/WhiteList_10X_Multiome.RNA")
+Dic2<-ATACWhite$V1
+names(Dic2)<-as.character(RNAWhite$V1)
+meta$ATACName<-Dic2[gsub(RNAclusterPost,"",row.names(meta))]
+return(meta)
+}
