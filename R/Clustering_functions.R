@@ -52,11 +52,12 @@ Cell_Variant.seurat <- FindClusters(Cell_Variant.seurat, resolution = res)
 #' @param path this should be the path to the cell-ranger results XX/outs
 #' @param atacmin minimum atac fragment for each cell, default is 1000
 #' @param umimin minimum rna umi for each cell, default is 1000
+#' @param cellID to be used for input(useful for re-clustering), default is NULL which will use the info from path/per_barcode_metrics.csv
 #' @return this returns seurat object with both RNA and ATAC
 #' @examples
 #' MultiWrapper(path="XX/CellRanger/Donor01_BMMC_1/outs/")
 #' @export
-Multi_Wrapper<-function(path="/lab/solexa_weissman/cweng/Projects/MitoTracing_Velocity/SecondaryAnalysis/Donor01_CD34_1_Multiomekit/CellRanger/Donor01_CD34_1/outs",atacmin=1000,umimin=1000){
+Multi_Wrapper<-function(path="/lab/solexa_weissman/cweng/Projects/MitoTracing_Velocity/SecondaryAnalysis/Donor01_CD34_1_Multiomekit/CellRanger/Donor01_CD34_1/outs",atacmin=1000,umimin=1000,CellID=NULL){
 require(Seurat)
 require(Signac)
 require(EnsDb.Hsapiens.v86)
@@ -65,7 +66,9 @@ require(dplyr)
 require(ggplot2)
 inputdata.10x <- Read10X_h5(paste(path,"/raw_feature_bc_matrix.h5",sep=""))
 per_barcode_metrics<-read.csv(paste(path,"/per_barcode_metrics.csv",sep=""))
+if(length(CellID)==0){
 CellID<-subset(per_barcode_metrics,is_cell==1)$barcode
+}
 # Extract rna and atac counts
 rna_counts <- inputdata.10x$`Gene Expression`
 atac_counts <- inputdata.10x$Peaks

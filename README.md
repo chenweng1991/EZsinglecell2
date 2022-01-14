@@ -34,6 +34,13 @@ Wrap Seurat Multiomics clustering
 Donor01_CD34_1_Multiome_wrapper<-Multi_Wrapper(path="/lab/solexa_weissman/cweng/Projects/MitoTracing_Velocity/SecondaryAnalysis/Donor01_CD34_1_Multiomekit/CellRanger/Donor01_CD34_1/outs")
 ```
 
+Seurat Multiomics clustering with subsetting
+``` r
+Donor01_CD34_1_Multiome_wrapper<-readRDS("/lab/solexa_weissman/cweng/Projects/RDS/Donor01_CD34_1_Multiome_wrapper.RDS")
+HSC.meta<-subset(Donor01_CD34_1_Multiome_wrapper$seurat@meta.data,CellType=="HSC")
+Donor01_HSC_Multiome_wrapper<-Multi_Wrapper(path="/lab/solexa_weissman/cweng/Projects/MitoTracing_Velocity/SecondaryAnalysis/Donor01_CD34_1_Multiomekit/CellRanger/Donor01_CD34_1/outs",atacmin=1000,umimin =1000,CellID = row.names(HSC.meta) )
+```
+
 
 Wrap Seurat ATAC clustering
 

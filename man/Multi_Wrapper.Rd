@@ -8,7 +8,8 @@ Multi_Wrapper(
  
     path = "/lab/solexa_weissman/cweng/Projects/MitoTracing_Velocity/SecondaryAnalysis/Donor01_CD34_1_Multiomekit/CellRanger/Donor01_CD34_1/outs",
   atacmin = 1000,
-  umimin = 1000
+  umimin = 1000,
+  CellID = NULL
 )
 }
 \arguments{
@@ -17,6 +18,8 @@ Multi_Wrapper(
 \item{atacmin}{minimum atac fragment for each cell, default is 1000}
 
 \item{umimin}{minimum rna umi for each cell, default is 1000}
+
+\item{cellID}{to be used for input(useful for re-clustering), default is NULL which will use the info from path/per_barcode_metrics.csv}
 }
 \value{
 this returns seurat object with both RNA and ATAC
