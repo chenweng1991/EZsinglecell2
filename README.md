@@ -4,7 +4,9 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of EZsinglecell2 is to ...
+The goal of EZsinglecell2 is to simply the rotine single cell analysis
+The testing jupyter notebook is here:
+lab/solexa_weissman/cweng/Packages/MyMultiome/Helpers/EZsinglecell2/EZsinglecell2Running.ipynb
 
 ## Installation
 
