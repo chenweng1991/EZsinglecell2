@@ -36,3 +36,26 @@ names(Dic2)<-as.character(RNAWhite$V1)
 meta$ATACName<-Dic2[gsub(RNAclusterPost,"",row.names(meta))]
 return(meta)
 }
+
+
+#' Function to Merge sparse Matrix
+#'
+#' This function allows you to input a list of sparse matrix and merge by rownames, return a new sparse matrix
+#' @param mtx.list  A list of sparse matrix to be merged
+#' @param postfix  a vector of postfix (Usually are numbers that added at the end of cell names). Better be consistent with a merged MitoTracing object orders
+#' @return new sparse matrix
+#' @examples
+#' Donor4_HSC_HPC_BMMC.Mtx<-MergeMtx(list(Donor04_BMMC_Multiome_wrapper$seurat@assays$RNA@counts,Donor04_HPC_Multiome_wrapper$seurat@assays$RNA@counts,Donor04_HSC_Multiome_wrapper$seurat@assays$RNA@counts),c(3,2,1))
+#' Donor4_HSC_HPC_BMMC.RNA.seurat<-GEM_Wrapper(Donor4_HSC_HPC_BMMC.Mtx)
+#' @export
+MergeMtx<-function(mtx.list,postfix){
+colnames(mtx.list[[1]])<-strsplit(colnames(mtx.list[[1]]),"-") %>% lapply(.,function(x){x[1]}) %>% unlist %>% paste(.,postfix[1],sep="-")
+Merged.mtx<-as.matrix(mtx.list[[1]])
+for(i in 2:length(mtx.list)){
+    colnames(mtx.list[[i]])<-strsplit(colnames(mtx.list[[i]]),"-") %>% lapply(.,function(x){x[1]}) %>% unlist %>% paste(.,postfix[i],sep="-")
+    Merged.mtx<-Tomerge_v2(Merged.mtx,as.matrix(mtx.list[[i]]),leavex = T, leavey = T)
+}
+Merged.mtx[is.na(Merged.mtx)]<-0
+Merged.mtx<-Matrix(as.matrix(Merged.mtx))
+return(Merged.mtx)
+}

@@ -2,6 +2,7 @@
 
 export(ATAC_Wrapper)
 export(GEM_Wrapper)
+export(MergeMtx)
 export(Multi_Wrapper)
 export(Tomerge_v2)
 export(Translate_RNA2ATAC)

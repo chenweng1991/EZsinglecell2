@@ -55,7 +55,7 @@ Cell_Variant.seurat <- FindClusters(Cell_Variant.seurat, resolution = res)
 #' @param cellID to be used for input(useful for re-clustering), default is NULL which will use the info from path/per_barcode_metrics.csv
 #' @return this returns seurat object with both RNA and ATAC
 #' @examples
-#' MultiWrapper(path="XX/CellRanger/Donor01_BMMC_1/outs/")
+#' Multi_Wrapper(path="XX/CellRanger/Donor01_BMMC_1/outs/")
 #' @export
 Multi_Wrapper<-function(path="/lab/solexa_weissman/cweng/Projects/MitoTracing_Velocity/SecondaryAnalysis/Donor01_CD34_1_Multiomekit/CellRanger/Donor01_CD34_1/outs",atacmin=1000,umimin=1000,CellID=NULL){
 require(Seurat)
@@ -119,3 +119,5 @@ ob <- RunUMAP(ob, nn.name = "weighted.nn", reduction.name = "wnn.umap", reductio
 ob <- FindClusters(ob, graph.name = "wsnn", algorithm = 3, verbose = FALSE)
 return(list(seurat=ob,metric=per_barcode_metrics))
 }
+
+
