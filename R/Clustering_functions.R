@@ -32,15 +32,15 @@ return(ob)
 #' @examples
 #' bmmc.filtered.atac<-SeuratLSIClustering(PeakVSCell.filtered.Mtx) #each row is a peak, each column is a cell,
 #' @export
-ATAC_Wrapper<-function(MTX,res=0.3){
+ATAC_Wrapper<-function(MTX,res=0.3,dim1=1, dim2=20){
 require(Signac)
 Cell_Variant.seurat<-CreateSeuratObject(counts = MTX, assay = "ATAC")
 VariableFeatures(Cell_Variant.seurat) <- row.names(Cell_Variant.seurat) #names(which(Matrix::rowSums(Cell_Variant.seurat) > 100))
 Cell_Variant.seurat <- RunTFIDF(Cell_Variant.seurat, n = 50)
 Cell_Variant.seurat<- FindTopFeatures(Cell_Variant.seurat, min.cutoff = 'q0')
 Cell_Variant.seurat <- RunSVD(Cell_Variant.seurat, n = 50)
-Cell_Variant.seurat <- RunUMAP(Cell_Variant.seurat, reduction = "lsi", dims = 1:20)
-Cell_Variant.seurat <- FindNeighbors(Cell_Variant.seurat,reduction ="lsi"  ,dims = 1:20)
+Cell_Variant.seurat <- RunUMAP(Cell_Variant.seurat, reduction = "lsi", dims = dim1:dim2)
+Cell_Variant.seurat <- FindNeighbors(Cell_Variant.seurat,reduction ="lsi"  ,dims = dim1:dim2)
 Cell_Variant.seurat <- FindClusters(Cell_Variant.seurat, resolution = res)
 }
 
@@ -65,9 +65,9 @@ library(GenomeInfoDb)
 require(dplyr)
 require(ggplot2)
 inputdata.10x <- Read10X_h5(paste(path,"/raw_feature_bc_matrix.h5",sep=""))
-per_barcode_metrics<-read.csv(paste(path,"/per_barcode_metrics.csv",sep=""))
+# per_barcode_metrics<-read.csv(paste(path,"/per_barcode_metrics.csv",sep=""))
 if(length(CellID)==0){
-CellID<-subset(per_barcode_metrics,is_cell==1)$barcode
+CellID<-read.table(paste(path,"/filtered_feature_bc_matrix/barcodes.tsv.gz",sep=""))$V1
 }
 # Extract rna and atac counts
 rna_counts <- inputdata.10x$`Gene Expression`
@@ -117,7 +117,7 @@ ob <- RunUMAP(ob, reduction = 'lsi', dims = 2:50, reduction.name = "umap.atac", 
 ob <- FindMultiModalNeighbors(ob, reduction.list = list("pca", "lsi"), dims.list = list(1:50, 2:50))
 ob <- RunUMAP(ob, nn.name = "weighted.nn", reduction.name = "wnn.umap", reduction.key = "wnnUMAP_")
 ob <- FindClusters(ob, graph.name = "wsnn", algorithm = 3, verbose = FALSE)
-return(list(seurat=ob,metric=per_barcode_metrics))
+return(ob)
 }
 
 

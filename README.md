@@ -64,3 +64,10 @@ PeakVSCell.filtered.Mtx<-dMcast(FragmentsOnPeak.filtered,Peaks~Cells)
 # Run ATAC clustering
 bmmc.filtered.atac<-ATAC_Wrapper(PeakVSCell.filtered.Mtx)
 ```
+## Data
+
+```r 
+data(ATACWhite) 
+data(RNAWhite) 
+data(Griffin_Signatures)
+```

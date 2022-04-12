@@ -4,7 +4,7 @@
 \alias{ATAC_Wrapper}
 \title{Wrap Seurat ATAC clustering}
 \usage{
-ATAC_Wrapper(MTX, res = 0.3)
+ATAC_Wrapper(MTX, res = 0.3, dim1 = 1, dim2 = 20)
 }
 \arguments{
 \item{MTX}{sparse Matrix of class "dgCMatrix", each row is a peak, each column is a cell,}
