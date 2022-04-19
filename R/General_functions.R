@@ -70,3 +70,69 @@ Merged.mtx[is.na(Merged.mtx)]<-0
 Merged.mtx<-Matrix(as.matrix(Merged.mtx))
 return(Merged.mtx)
 }
+
+#' Function to add hematopoietic signatures from Griffin_Signatures
+#'
+#' This function allows you to input a seurat object, add the signatures and return an seurat object
+#' @param object a seurat object
+#' @return a seurat object
+#' @export
+AddHemSignature<-function(object=Donor01_BMMC_Multiome_wrapper.filtered){
+require(Seurat)
+data(Griffin_Signatures)
+Sig.HSC<-list(Griffin_Signatures$Griffin_BPDCN_HSC %>% .[!is.na(.)])
+Sig.Prog<-list(Griffin_Signatures$Griffin_BPDCN_Prog %>% .[!is.na(.)])
+Sig.EarlyE<-list(Griffin_Signatures$Griffin_BPDCN_EarlyE %>% .[!is.na(.)])
+Sig.LateE<-list(Griffin_Signatures$Griffin_BPDCN_LateE	 %>% .[!is.na(.)])
+Sig.ProMono<-list(Griffin_Signatures$Griffin_BPDCN_ProMono %>% .[!is.na(.)])
+Sig.Mono<-list(Griffin_Signatures$Griffin_BPDCN_Mono %>% .[!is.na(.)])
+Sig.ncMono<-list(Griffin_Signatures$Griffin_BPDCN_ncMono %>% .[!is.na(.)])
+Sig.cDC<-list(Griffin_Signatures$Griffin_BPDCN_cDC %>% .[!is.na(.)])
+Sig.pDC<-list(Griffin_Signatures$Griffin_BPDCN_pDC %>% .[!is.na(.)])
+Sig.ProB<-list(Griffin_Signatures$Griffin_BPDCN_ProB %>% .[!is.na(.)])
+Sig.PreB<-list(Griffin_Signatures$Griffin_BPDCN_PreB %>% .[!is.na(.)])
+Sig.B<-list(Griffin_Signatures$Griffin_BPDCN_B %>% .[!is.na(.)])
+Sig.Plasma<-list(Griffin_Signatures$Griffin_BPDCN_Plasma %>% .[!is.na(.)])
+Sig.T<-list(Griffin_Signatures$Griffin_BPDCN_T %>% .[!is.na(.)])
+Sig.CTL<-list(Griffin_Signatures$Griffin_BPDCN_CTL %>% .[!is.na(.)])
+Sig.NK<-list(Griffin_Signatures$Griffin_BPDCN_NK %>% .[!is.na(.)])
+DefaultAssay(object)<-"SCT"
+object<-AddModuleScore(object = object, features = Sig.HSC, name = "Sig.HSC")
+object<-AddModuleScore(object = object, features = Sig.Prog, name = "Sig.Prog")
+object<-AddModuleScore(object = object, features = Sig.EarlyE, name = "Sig.EarlyE")
+object<-AddModuleScore(object = object, features = Sig.LateE, name = "Sig.LateE")
+object<-AddModuleScore(object = object, features = Sig.ProMono, name = "Sig.ProMono")
+object<-AddModuleScore(object = object, features = Sig.Mono, name = "Sig.Mono")
+object<-AddModuleScore(object = object, features = Sig.ncMono, name = "Sig.ncMono")
+object<-AddModuleScore(object = object, features = Sig.cDC, name = "Sig.cDC")
+object<-AddModuleScore(object = object, features = Sig.pDC, name = "Sig.pDC")
+object<-AddModuleScore(object = object, features = Sig.ProB, name = "Sig.ProB")
+object<-AddModuleScore(object = object, features = Sig.PreB, name = "Sig.PreB")
+object<-AddModuleScore(object = object, features = Sig.B, name = "Sig.B")
+object<-AddModuleScore(object = object, features = Sig.Plasma, name = "Sig.Plasma")
+object<-AddModuleScore(object = object, features = Sig.T, name = "Sig.T")
+object<-AddModuleScore(object = object, features = Sig.CTL, name = "Sig.CTL")
+object<-AddModuleScore(object = object, features = Sig.NK, name = "Sig.NK")
+return(object)    
+}
+
+
+#' Function to reclustering a seurat object
+#'
+#' This function allows you to input a seurat object(multiome), redo clustering. Usually this is after subset
+#' @param ob a seurat object
+#' @return a seurat object
+#' @export
+Reclustering<-function(ob){
+DefaultAssay(ob) <- "RNA"
+ob <- SCTransform(ob, verbose = FALSE) %>% RunPCA() %>% RunUMAP(dims = 1:50, reduction.name = 'umap.rna', reduction.key = 'rnaUMAP_')
+DefaultAssay(ob) <- "ATAC"
+ob <- RunTFIDF(ob)
+ob <- FindTopFeatures(ob, min.cutoff = 'q0')
+ob <- RunSVD(ob)
+ob <- RunUMAP(ob, reduction = 'lsi', dims = 2:50, reduction.name = "umap.atac", reduction.key = "atacUMAP_")
+ob <- FindMultiModalNeighbors(ob, reduction.list = list("pca", "lsi"), dims.list = list(1:50, 2:50))
+ob <- RunUMAP(ob, nn.name = "weighted.nn", reduction.name = "wnn.umap", reduction.key = "wnnUMAP_")
+ob <- FindClusters(ob, graph.name = "wsnn", algorithm = 3, verbose = FALSE)
+return(ob)
+}
