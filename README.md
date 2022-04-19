@@ -71,3 +71,56 @@ data(ATACWhite)
 data(RNAWhite) 
 data(Griffin_Signatures)
 ```
+
+## Hem dateset convinience
+
+Standard cell types
+```r
+STD.CellType.lv<-c("CD4","CD8","NK","B","Plasma","ProB","CLP","LMPP","pDC","MPP","HSC","CMP","MKP","MEP","EryP","cDC","MDP","CDP","GMP","Mono")
+```
+
+Plot for known progenitor markers  and BMMC markers
+```r
+## A function to plot progenitor marker genes
+PlotProgMarker<-function(ob){
+options(repr.plot.width=20, repr.plot.height=8)
+DefaultAssay(ob)<-"SCT"
+p1<-FeaturePlot(ob,"CD34",reduction = 'wnn.umap') ## HSPC
+p2<-FeaturePlot(ob,"HLF",reduction = 'wnn.umap')  ## HSC
+p3<-FeaturePlot(ob,"CRHBP",reduction = 'wnn.umap')  ## HSC
+p4<-FeaturePlot(ob,"MPO",reduction = 'wnn.umap')    ## GMP
+p5<-FeaturePlot(ob,"PLEK",reduction = 'wnn.umap')   ## MkP
+p6<-FeaturePlot(ob,"ARPP21",reduction = 'wnn.umap')  ## Lym
+p7<-FeaturePlot(ob,"GATA1",reduction = 'wnn.umap')   ## MEP
+p8<-FeaturePlot(ob,"SPI1",reduction = 'wnn.umap')   ## GMP
+grid.arrange(p1,p2,p3,p4,p5,p6,p7,p8,ncol=5)
+}
+## example to plot BMMC markers
+FeaturePlot(Donor01_BMMC_Multiome_wrapper.filtered, reduction = 'wnn.umap',features = c("CCR7","CD8A","GNLY","MS4A1","LYZ","SLC4A1"),ncol=6)
+```
+
+Add and plot the signatures
+```r
+Donor01_BMMC_Multiome_wrapper.filtered<-AddHemSignature(Donor01_BMMC_Multiome_wrapper.filtered)
+FeaturePlot(object = Donor01_BMMC_Multiome_wrapper.filtered, features = c("Sig.cDC1","Sig.Prog1","Sig.EarlyE1","Sig.LateE1","Sig.ProMono1","Sig.Mono1","Sig.ncMono1","Sig.cDC1","Sig.pDC1","Sig.ProB1","Sig.PreB1","Sig.B1","Sig.Plasma1","Sig.T1","Sig.CTL1","Sig.NK1"),reduction = 'wnn.umap',pt.size =1 )
+```
+
+Subset and reclustering
+```r
+Cluster4.ob<- subset(x = Donor01_BMMC_Multiome_wrapper.filtered,subset= seurat_clusters==4)
+Cluster4.ob<-Reclustering(Cluster4.ob)
+```
+
+Find and show markers
+```r
+DefaultAssay(Donor01_BMMC_Multiome_wrapper.filtered) <- "SCT"
+DN1_BMMC.markers <- FindAllMarkers(Donor01_BMMC_Multiome_wrapper.filtered, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25)
+DN1_BMMC.markers %>% group_by(cluster) %>% top_n(n = 5, wt = avg_log2FC)-> top5
+subset(top5,cluster==10)
+```
+
+Change Ident
+```r
+Donor01_BMMC_Multiome_wrapper.filtered<- SetIdent(Donor01_BMMC_Multiome_wrapper.filtered, value = "seurat_clusters")
+DimPlot(Donor01_BMMC_Multiome_wrapper.filtered, reduction = "wnn.umap", label = T, label.size = 5, repel = TRUE) + ggtitle("WNN")
+```
