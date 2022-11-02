@@ -103,6 +103,31 @@ Add and plot the signatures
 ```r
 Donor01_BMMC_Multiome_wrapper.filtered<-AddHemSignature(Donor01_BMMC_Multiome_wrapper.filtered)
 FeaturePlot(object = Donor01_BMMC_Multiome_wrapper.filtered, features = c("Sig.cDC1","Sig.Prog1","Sig.EarlyE1","Sig.LateE1","Sig.ProMono1","Sig.Mono1","Sig.ncMono1","Sig.cDC1","Sig.pDC1","Sig.ProB1","Sig.PreB1","Sig.B1","Sig.Plasma1","Sig.T1","Sig.CTL1","Sig.NK1"),reduction = 'wnn.umap',pt.size =1 )
+
+## To add category
+AddSTD_Cat<-function(ob=Donor01_BMMC_Multiome_wrapper.filtered){
+ob@meta.data$STD_Cat<-recode(ob@meta.data$STD.CellType,
+HSC="Stem",
+MPP="EarlyP",CMP="EarlyP",MKP="EarlyP",
+MEP="Mye_P",GMP="Mye_P",MDP="Mye_P",CDP="Mye_P", EryP="Mye_P",
+LMPP="Lym_P",CLP="Lym_P",ProB="Lym_P",Plasma="Lym_P",
+Mono="Mye",Ery="Mye",mDC="Mye",
+CD4="Lym",CD8="Lym" ,NK="Lym"  ,B="Lym" ,pDC="Lym") 
+ob@meta.data$STD_Cat<-factor(ob@meta.data$STD_Cat,levels=c("Stem","EarlyP","Mye_P","Lym_P","Mye","Lym"))
+return(ob)
+}
+                             
+AddSTD_Cat2<-function(ob){
+ob@meta.data$STD_Cat2<-recode(ob@meta.data$STD.CellType,
+HSC="Stem",
+MPP="EarlyP",CMP="EarlyP",MKP="EarlyP",
+MEP="LateP",GMP="LateP",MDP="LateP",CDP="LateP",
+LMPP="LateP",CLP="LateP",ProB="LateP",EryP="LateP",
+Mono="mature",Ery="mature",mDC="mature",
+CD4="mature",CD8="mature" ,NK="mature",B="mature" ,pDC="mature",Plasma="mature") 
+ob@meta.data$STD_Cat2<-factor(ob@meta.data$STD_Cat2,levels=c("Stem","EarlyP","LateP","mature"))
+return(ob)
+}    
 ```
 
 Subset and reclustering
